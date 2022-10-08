@@ -1,0 +1,37 @@
+{
+	"id": "com.webos.app.statusbar",
+	"version": "1.0.0",
+	"vendor": "LGE-SWP",
+	"type": "web",
+	"main": "index.html",
+	"title": "Enact Volume Control",
+	"icon": "icon.png",
+	"miniicon": "icon-mini.png",
+	"largeIcon": "icon-large.png",
+	"uiRevision": 2,
+	"requiredPermissions": [
+		"application.launcher",
+		"networkconnection.management",
+		"networkconnection.query",
+		"settings.management",
+		"settings.query",
+		"systemsettings.management",
+		"systemsettings.query",
+		"time.management",
+		"time.query",
+        "wifi.management",
+	    "wifi.query",
+		"audio.query",
+		"audio.operation"
+	],
+	"trustLevel": "trusted",
+	"accessibility": {
+		"supportsAudioGuidance": true
+	},
+	"defaultWindowType": "system_ui",
+	"noSplashOnLaunch": true,
+	"spinnerOnLaunch": false,
+	"transparent": true,
+	"lockable": false,
+	"visible": false
+}
