@@ -77,8 +77,7 @@ const StatusBarItems = (props) => {
   };
   return (
     <MenuPopupButton
-      // onClick={handleClick}
-      onClick={()=>{}}
+      onClick={handleClick}
       icon={props.statusIcon}
       open={popUp}
       popupComponent={renderPopup}

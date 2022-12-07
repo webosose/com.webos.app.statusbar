@@ -1,39 +1,13 @@
-import { Component } from "react";
-import Controls from "./Controls";
+import ContextualPopupButton from "../components/ContextualPopupButton/ContextualPopupButton";
 import css from "./MainPanel.module.less";
-import StatusBarItems from "./StatusBarItems";
-
-const statusIcons = ["sound", "notification", "download", "bluetooth", "wifi4"];
-class MainPanel extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      shown: true,
-    };
-  }
-
-  componentDidMount() {
-    document.addEventListener("webOSRelaunch", () => {
-      this.setState({
-        shown: true,
-      });
-    });
-  }
-
-  render() {
-    return (
-      <div className={css.app}>
-        <Controls className={css.controls}>
-          <buttons>
-            {statusIcons.map((i) => {
-              return <StatusBarItems statusIcon={i} />;
-            })}
-          </buttons>
-        </Controls>
-      </div>
-    );
-  }
+const icons = ['sound','notification','download','bluetooth','wifi4']
+const MainPanel = () => {
+  console.log('MainPanel: MainPanel:',)
+  return <div className={css.container}>
+    <div className={css.statusBarBg}>
+    {icons.map((v,index)=><ContextualPopupButton key={index} icon={v} />)}
+    </div>
+  </div>
 }
 
 export default MainPanel;

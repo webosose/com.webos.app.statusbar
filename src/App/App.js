@@ -1,84 +1,93 @@
-import { Component } from "react";
+ /* eslint-disable  react-hooks/exhaustive-deps */
+import { useCallback, useEffect, useState } from "react";
 import ThemeDecorator from "@enact/sandstone/ThemeDecorator";
 import MainPanel from "../views/MainPanel";
 import css from "./App.module.less";
-import compose from "ramda/src/compose";
 import Transition from "@enact/ui/Transition";
+import { useDispatch, useSelector } from "react-redux";
+import { getVolume } from "../actions/volume";
+import { SHOW_APP } from "../actions/actionNames";
+import getOSInfo from "../actions/getOSInfo";
+import { getWifiState } from "../actions/wifiActions";
 
-let delayTohide = 5000;
-let hideTimerId = null;
-class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      shown: true,
-    };
-  }
-
-  onHideVolumeControl = () => {
-    console.log("invoked onHideVolumeControl function...");
-    this.setState({
-      shown: false,
-      type: "slide",
+const App = () => {
+  const appShow = useSelector(state => state.appState);
+  const [curreentLanguage, setCurreentLanguage] = useState("");
+  const dispatch = useDispatch();
+  const onShowHandler = useCallback(() => {
+    dispatch({
+      type: SHOW_APP,
+      payload: true
     });
-    window.close();
-  };
+  }, [dispatch])
 
-  clearHideTime = () => {
-    if (hideTimerId) {
-      clearTimeout(hideTimerId);
+  useEffect(() => {
+    if (!document.hidden && !appShow) {
+      setTimeout(() => {
+        dispatch({
+          type: SHOW_APP,
+          payload: true
+        });
+      }, 1000);
     }
-  };
+  }, [dispatch])
 
-  setHideTime = () => {
-    this.clearHideTime();
-    hideTimerId = setTimeout(() => {
-      this.setState({
-        shown: false,
-        type: "fade",
-      });
-    }, delayTohide);
-  };
+  useEffect(() => {
+    dispatch(getWifiState()); // Get Wifi state enabled or disabled
+  }, [dispatch])
 
-  componentDidMount() {
-    document.addEventListener("webOSLocaleChange", () => {
-      window.location.reload();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      document.addEventListener('webOSRelaunch', onShowHandler);
+      setCurreentLanguage(window.navigator.language);
+    }
+    dispatch(getVolume());
+    dispatch(getOSInfo());
+
+    document.addEventListener('webOSLocaleChange', () => {
+      console.log("statusBar-LISTENED TO webOSLocaleChange EVENT ====>")
+      // window.location.reload();
+      if (typeof window !== 'undefined' && window.navigator) {
+        console.log("statusBar-curreentLanguage is (inside) ===> ", curreentLanguage)
+
+        if (curreentLanguage !== window.navigator.language) {
+          console.log("statusBar-inside IF CONDITION window.navigator.language =======> ", window.navigator.language)
+          window.location.reload();
+        } else {
+          console.log("statusBar-inside ELSE CONDITION window.navigator.language =======> ", window.navigator.language)
+        }
+      }
     });
-    document.addEventListener("webOSRelaunch", () => {
-      this.setState({
-        shown: true,
-        type: "slide",
-      });
-      this.setHideTime();
-    });
-  }
 
-  render() {
-    return (
-      <>
-        <div className={css.app}>
-          <Transition css={css} type="fade" visible={this.state.shown}>
-            <div className={css.basement} onClick={this.onHideVolumeControl} />
-          </Transition>
-          <Transition
-            direction="up"
-            visible={this.state.shown}
-            type={this.state.type}
-          >
-            <MainPanel />
-          </Transition>
-        </div>
-      </>
-    );
-  }
+  }, [dispatch, onShowHandler, appShow]);
+
+  const onHideHandler = useCallback(() => {
+    dispatch({
+      type: SHOW_APP,
+      payload: false
+    });
+  }, [dispatch])
+  const closeApp = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      window.close();
+    }
+  }, []);
+  console.log("StatusBar-App.js")
+  return (
+    <div className={css.app}>
+      <Transition type="fade" visible={appShow} onHide={closeApp}>
+        <div className={css.basement} onClick={onHideHandler} />
+      </Transition>
+      <Transition
+        direction="up"
+        visible={appShow}
+      >
+        <MainPanel />
+      </Transition>
+    </div>
+  )
 }
 
-const AppDecorator = compose(
-  ThemeDecorator({
-    noAutoFocus: true,
-    overlay: true,
-  })
-);
+export default ThemeDecorator({ overlay: true }, App);
 
-export default AppDecorator(App);

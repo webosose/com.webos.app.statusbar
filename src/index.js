@@ -1,10 +1,12 @@
 /* global ENACT_PACK_ISOMORPHIC */
-import {createRoot, hydrateRoot} from 'react-dom/client';
-
+import { createRoot, hydrateRoot } from 'react-dom/client';
+// import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+// import { InputField } from '@enact/sandstone/Input';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-
-const appElement = (<App />);
+import configureStore from './store';
+const store = configureStore();
+const appElement = (<Provider store={store}><App /></Provider>);
 
 // In a browser environment, render instead of exporting
 if (typeof window !== 'undefined') {
@@ -21,4 +23,4 @@ export default appElement;
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint.
 // Learn more: https://github.com/enactjs/cli/blob/master/docs/measuring-performance.md
-reportWebVitals();
+// reportWebVitals();
