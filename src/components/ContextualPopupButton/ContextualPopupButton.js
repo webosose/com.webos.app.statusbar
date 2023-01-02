@@ -1,4 +1,3 @@
-import Button from "@enact/sandstone/Button";
 import kind from '@enact/core/kind';
 import ContextualPopupDecorator from '@enact/sandstone/ContextualPopupDecorator';
 import Sound from '../../views/Sound/Sound';
@@ -31,13 +30,12 @@ const IconButton = kind({
   name: "SettingsIcon",
   render: (props) => {
     return (
-      <Button
+      <Icon
         selected={props.isOpened}
-        icon={props.icon}
         onClick={props.onClick}
-        className={props.icon.includes('sound') || props.icon.includes('Wifi_Connect') ? css.customIcon_Align :css.button_cnt}
+        className={props.isOpened ? css.button_cnt_effects : css.button_cnt}
         css={css}
-      />
+      >{props.icon}</Icon>
     );
   },
 });
@@ -106,7 +104,6 @@ const ContextualPopupButton = ({ icon }) => {
         open={isOpened}
         isOpened={isOpened}
         popupComponent={renderPopup}
-        size="small"
         direction="above center"
         noAutoDismiss={false}
       />
@@ -118,7 +115,6 @@ const ContextualPopupButton = ({ icon }) => {
         open={isOpened}
         isOpened={isOpened}
         popupComponent={renderPopup}
-        size="small"
         direction="above center"
         noAutoDismiss={false}
       />
@@ -126,7 +122,7 @@ const ContextualPopupButton = ({ icon }) => {
   }
 
   console.log("appState::", appState);
-  console.log("wifiState is =========> ",wifiState)
+  console.log("wifiState is =========> ", wifiState)
 
   return renderIcons()
 }
