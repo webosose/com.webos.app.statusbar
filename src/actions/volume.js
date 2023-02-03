@@ -16,11 +16,12 @@ export const setVolume = (value) => () => {
 
 export const getVolume = () => dispatch => {
     const displayAffinity = JSON.parse(window.PalmSystem.launchParams).displayAffinity;
+    const params =  displayAffinity === 1 ? {"soundOutput":"pcm_output1"} : {};
     service.getMasterVolume({
-        sessionId: displayAffinity,
+        ...params,
         onSuccess: (res) => {
             console.log("getMasterVolume:  ", res)
-            if (res.returnValue) {
+            if (res.returnValue && res.volumeStatus &&  res.volumeStatus.sessionId === displayAffinity) {
                 dispatch({
                     type: UPDATE_MASTER_VOLUME,
                     payload: { ...res.volumeStatus }
