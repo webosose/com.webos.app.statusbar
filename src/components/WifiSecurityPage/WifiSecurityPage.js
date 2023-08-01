@@ -20,6 +20,9 @@ const WifiSecurityPage = () => {
     const [errorMessage, setErrorMessage] = useState(null)
     const dispatch = useDispatch();
     const connectWifiHandler = useCallback(() => {
+        // clear current error if any when click on connect button
+        setErrorMessage(null);
+
         console.log("connectWifiHandler function triggered ===========>")
         let params = {
             ssid: showSecurityPage.ssid,
