@@ -29,13 +29,15 @@ const panels = {
 const IconButton = kind({
   name: "SettingsIcon",
   render: (props) => {
+    const {isOpened, onClick, icon, ...rest} = props;
     return (
       <Icon
-        selected={props.isOpened}
-        onClick={props.onClick}
-        className={props.isOpened ? css.button_cnt_effects : css.button_cnt}
+         {...rest}
+        selected={isOpened}
+        onClick={onClick}
+        className={isOpened ? css.button_cnt_effects : css.button_cnt}
         css={css}
-      >{props.icon}</Icon>
+      >{icon}</Icon>
     );
   },
 });
